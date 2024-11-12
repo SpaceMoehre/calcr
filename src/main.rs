@@ -22,5 +22,5 @@ fn main() {
         Ok(e) => args.port = e.parse::<u16>().unwrap(),
         _=>()
     }
-    server::start_server(args);
+    let _ = server::start_server(args);
 }
