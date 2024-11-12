@@ -87,11 +87,10 @@
     <span id="icon">🌞</span>
   </div>
 
-  <h1>Calcr - Base Conversion Task</h1>
+  <h1><a href="/" style="color: inherit;">Calcr</a> - Base Conversion Task</h1>
   <div class="task-container" id="task-container">
     <div class="task" id="task">
       Loading...
-      <span class="base-label" id="base-label"></span>
     </div>
     <input type="text" class="solution-input" id="solution-input" placeholder="Enter your solution">
     <button class="button" id="check-button">Check</button>
@@ -99,6 +98,7 @@
   </div>
 
   <script>
+
     let currentResult = "";
 
     // Function to toggle theme
@@ -130,19 +130,44 @@
 
     // Function to fetch a new task
     function fetchNewTask() {
+        if (window.location.search.substr(1).includes("random=1")){
+            from = Math.floor(Math.random() * 15)+2;
+            to = Math.floor(Math.random() * 15)+2;
+            while (to === from){
+                console.log(to === from);
+                console.log(to,from);
+                to = Math.floor(Math.random() * 15)+2;
+            }
+            //window.location.search = "random=1&from=" + from + "&to=" + to;
+        }
+    else{
+        from = Number(/from=([^&#=]*)/.exec(window.location.search)[1]);
+        to = Number(/to=([^&#=]*)/.exec(window.location.search)[1]);
+    }
+
+
+      document.getElementById('solution-input').value = "";
       fetch('/api/generate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ from: 10, to: 16 })
+        body: JSON.stringify({ from: from , to: to })
       })
       .then(response => response.json())
       .then(data => {
         currentResult = data.result;
         document.getElementById('task').textContent = data.task_num;
-        document.getElementById('base-label').textContent = `Base ${data.from_base}`;
+        var subElement = document.createElement('sub');
+        subElement.textContent = ` ${data.from_base}`;
+        var toElement = document.createElement('p');
+        toElement.textContent = ` -> Base ${data.to_base}`;
+        subElement.appendChild(toElement)
+        
+        document.getElementById('task').appendChild(subElement);
         document.getElementById('task-container').style.borderColor = '#ddd';
         document.getElementById('task-container').style.backgroundColor = '';
         document.getElementById('new-task-button').style.display = 'none';
+
+
       })
       .catch(error => console.error('Error fetching task:', error));
     }

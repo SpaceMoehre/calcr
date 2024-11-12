@@ -1,6 +1,15 @@
-use ntex::web::{self, error, middleware, App, Error, HttpResponse};
+use ntex::web::{self, error::{self, HttpError}, middleware, App, Error, HttpResponse};
 use tera::Tera;
+use super::generator;
 
+use rand::Rng;
+use serde::Deserialize;
+
+#[derive(Deserialize)]
+pub struct GenerateRequest{ 
+    from: u8, 
+    to: u8
+}
 #[web::get("/")]
 async fn serve_index(
     tmpl: web::types::State<tera::Tera>,
@@ -25,8 +34,17 @@ async fn serve_convert(
     Ok(HttpResponse::Ok().content_type("text/html").body(s))
 }
 
+
+// Define the generate endpoint to handle the JSON POST request.
+// #[web::post("/generate")]
+async fn api_generate(req: web::types::Json<GenerateRequest>) -> Result<web::HttpResponse, HttpError> {
+    let mut rng: rand::prelude::ThreadRng = rand::thread_rng();
+    let obj: generator::Task = generator::generate_convert(rng.gen_range(0..4096), req.from, req.to);
+    Ok(HttpResponse::Ok().content_type("application/json").json(&obj))
+}
+
 #[ntex::main]
-pub async fn start_server() -> std::io::Result<()> {
+pub async fn start_server(args: super::Args) -> std::io::Result<()> {
     web::server(|| {
         let tera =
             Tera::new(concat!(env!("CARGO_MANIFEST_DIR"), "/templates/**/*")).unwrap();
@@ -37,9 +55,11 @@ pub async fn start_server() -> std::io::Result<()> {
             .service(serve_index)
             .service(serve_random_convert)
             .service(serve_convert) 
+            .service(web::resource("/api/generate").route(web::post().to(api_generate)))
+
     })
     .workers(4)
-    .bind(("0.0.0.0", 28080))?
+    .bind((args.bind_address.as_str(), args.port))?
     .run()
     .await
 }
