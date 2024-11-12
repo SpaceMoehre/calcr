@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calcr - Base Conversion Training</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    /* Basic styling */
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      transition: background-color 0.3s, color 0.3s;
+    }
+    h1 {
+      text-align: center;
+    }
+    .mode-switch {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 20px;
+      font-size: 24px;
+      cursor: pointer;
+    }
+    .modes-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      max-width: 400px;
+      margin: 0 auto;
+    }
+    .mode {
+      border: 1px solid #ddd;
+      padding: 15px;
+      border-radius: 5px;
+      transition: background-color 0.3s, color 0.3s;
+      cursor: pointer;
+      text-decoration: none;
+      color: inherit;
+    }
+    .mode:hover {
+      background-color: #f0f0f0;
+    }
+
+    /* Dark mode styles */
+    .dark-mode {
+      background-color: #121212;
+      color: #ffffff;
+    }
+    .dark-mode .mode {
+      border-color: #444;
+    }
+    .dark-mode .mode:hover {
+      background-color: #333;
+    }
+  </style>
+</head>
+<body>
+  <div class="mode-switch" id="theme-toggle">
+    <span id="icon">🌞</span>
+  </div>
+
+  <h1>Calcr - Base Conversion Training</h1>
+  <div class="modes-list">
+    <a class="mode" href="convert.html?from=2&to=10">Binary to Decimal</a>
+    <a class="mode" href="convert.html?from=10&to=2">Decimal to Binary</a>
+    <a class="mode" href="convert.html?from=2&to=16">Binary to Hexadecimal</a>
+    <a class="mode" href="convert.html?from=16&to=2">Hexadecimal to Binary</a>
+    <a class="mode" href="convert.html?from=10&to=16">Decimal to Hexadecimal</a>
+    <a class="mode" href="convert.html?from=16&to=10">Hexadecimal to Decimal</a>
+  </div>
+
+  <script>
+    // Function to toggle theme
+    function toggleTheme() {
+      const isDarkMode = document.body.classList.toggle('dark-mode');
+      localStorage.setItem('dark-mode', isDarkMode ? 'enabled' : 'disabled');
+      updateIcon(isDarkMode);
+    }
+
+    // Function to update the sun/moon icon
+    function updateIcon(isDarkMode) {
+      const icon = document.getElementById('icon');
+      icon.textContent = isDarkMode ? '🌜' : '🌞';
+    }
+
+    // Check and apply the saved theme on page load
+    window.onload = () => {
+      const savedTheme = localStorage.getItem('dark-mode');
+      const isDarkMode = savedTheme === 'enabled';
+      if (isDarkMode) {
+        document.body.classList.add('dark-mode');
+      }
+      updateIcon(isDarkMode);
+    };
+
+    // Add event listener to the toggle icon
+    document.getElementById('theme-toggle').addEventListener('click', toggleTheme);
+  </script>
+</body>
+</html>
