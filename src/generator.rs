@@ -1,14 +1,30 @@
 
 // A task contains the information for the user
-struct Task{
+
+use serde::Serialize;
+
+#[derive(Serialize)]
+pub struct Task{
     task_num:String,
     result:String,
     from_base: u8,
     to_base:u8
 }
 
-pub fn generate_convert(num:u32, from_base:u8, to_base:u8){
+
+
+pub fn generate_convert(num:u32, from_base:u8, to_base:u8) -> Task{
     
+    let task = format_radix(num, from_base as u32);
+        
+    let result = format_radix(num, to_base as u32);
+    
+    Task{
+        task_num:task,
+        result: result,
+        from_base: from_base,
+        to_base: to_base
+    }
 }
 
 
