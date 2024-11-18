@@ -12,7 +12,8 @@ struct Args {
 }
 
 fn main() {
-
+    std::env::set_var("RUST_LOG", "ntex=info,diesel=debug");
+    env_logger::init();
     let mut args = Args::parse();
     match env::var("CALCR_BIND_ADDRESS"){
         Ok(e) => args.bind_address = e,
