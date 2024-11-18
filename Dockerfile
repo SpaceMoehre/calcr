@@ -20,5 +20,6 @@ WORKDIR /app
 COPY --from=builder /app/target/x86_64-unknown-linux-musl/release/calcr /usr/local/bin/calcr
 COPY --from=builder /app/templates /app/templates
 ENV CARGO_MANIFEST_DIR=/app
+
 # Set the entrypoint to the compiled binary
 ENTRYPOINT ["/usr/local/bin/calcr"]

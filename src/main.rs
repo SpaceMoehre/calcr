@@ -7,7 +7,7 @@ use std::env;
 struct Args {
     #[clap(short, long, default_value_t = 8080)]
     port: u16,
-    #[clap(short, long, default_value_t = String::from("127.0.0.1"))]
+    #[clap(short, long, default_value_t = String::from("0.0.0.0"))]
     bind_address: String,
 }
 
